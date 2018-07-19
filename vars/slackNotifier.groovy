@@ -11,6 +11,8 @@ def call(String buildStatus = 'STARTED') {
   def color = 'RED'
   def colorCode = '#FF0000'
   def subject = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
+  def commit = sh(returnStdout: true, script: 'git rev-parse HEAD')
+  def author = sh(returnStdout: true, script: "git --no-pager show -s --format='%an' ${Commit}").trim()
   def summary = "${subject} (${env.BUILD_URL}) ${author}\n"
   def details = """<p>${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
     <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>"""
