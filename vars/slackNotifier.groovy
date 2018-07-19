@@ -3,7 +3,6 @@
 /**
  * Send notifications based on build status string
  */
-
 def call(String buildStatus = 'STARTED') {
   // build status of null means successful
   buildStatus =  buildStatus ?: 'SUCCESSFUL'
@@ -20,23 +19,11 @@ def call(String buildStatus = 'STARTED') {
   if (buildStatus == 'STARTED') {
     color = 'YELLOW'
     colorCode = '#FFFF00'
-    buildStatus = 'Started'
   } else if (buildStatus == 'SUCCESSFUL') {
     color = 'GREEN'
     colorCode = '#00FF00'
-    buildStatus = 'Successful'
-  } else if (buildStatus == 'FAILURE') {
-    buildStatus = 'FAILED'
   }
 
   // Send notifications
-  try
-  {
-    slackSend (color: colorCode, message: summary)
-  }
-  catch (error)
-  {
-    echo "Slack notification failed: $error"
-    currentBuild.result = 'UNSTABLE'
-  }
+  slackSend (color: colorCode, message: summary)
 }
