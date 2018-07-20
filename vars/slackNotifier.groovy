@@ -19,11 +19,7 @@ def call(String buildStatus = 'STARTED', String branch = 'master') {
   def subject = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}] (<${env.RUN_DISPLAY_URL}|Open>) (<${env.RUN_CHANGES_DISPLAY_URL}|  Changes>)'"
   def title = "${env.JOB_NAME} Build: #${env.BUILD_NUMBER}"
   def title_link = "${env.RUN_DISPLAY_URL}"
-  def Branch(branchName) {
-      branchName = "${branchName}"
-  }
-  //def branchName = "${env.GIT_BRANCH}"
-
+  def branchName = "${env.GIT_BRANCH}"
   def commit = sh(returnStdout: true, script: 'git rev-parse HEAD')
   def author = sh(returnStdout: true, script: "git --no-pager show -s --format='%an'").trim()
 
