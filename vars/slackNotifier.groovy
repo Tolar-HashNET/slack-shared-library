@@ -8,7 +8,7 @@ import net.sf.json.JSONObject;
 import hudson.tasks.test.AbstractTestResultAction;
 import hudson.model.Actionable;
 
-def call(String buildStatus = 'STARTED', String branch = 'master') {
+def call(String buildStatus = 'STARTED') {
 
   // buildStatus of null means successfull
   buildStatus = buildStatus ?: 'SUCCESSFUL'
@@ -17,10 +17,10 @@ def call(String buildStatus = 'STARTED', String branch = 'master') {
   def colorName = 'RED'
   def colorCode = '#FF0000'
   def subject = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}] (<${env.RUN_DISPLAY_URL}|Open>) (<${env.RUN_CHANGES_DISPLAY_URL}|  Changes>)'"
-  def title = "${env.JOB_NAME} Build: #${env.BUILD_NUMBER}"
+  def title = "${env.JOB_NAME} Build: ${env.BUILD_NUMBER}"
   def title_link = "${env.RUN_DISPLAY_URL}"
-  //def branchName = "${env.GIT_BRANCH}"
-  def branchName = sh(returnStdout: true, script: 'git rev-parse --abbrev-ref HEAD').trim()
+  def branchName = "${env.BRANCH_NAME}"
+
   def commit = sh(returnStdout: true, script: 'git rev-parse HEAD')
   def author = sh(returnStdout: true, script: "git --no-pager show -s --format='%an'").trim()
 
@@ -85,7 +85,7 @@ def call(String buildStatus = 'STARTED', String branch = 'master') {
   commitAuthor.put('title', 'Author');
   commitAuthor.put('value', author.toString());
   commitAuthor.put('short', true);
-  // JSONObject for commit message
+  // JSONObject for branch
   JSONObject commitMessage = new JSONObject();
   commitMessage.put('title', 'Commit Message');
   commitMessage.put('value', message.toString());
@@ -101,6 +101,5 @@ def call(String buildStatus = 'STARTED', String branch = 'master') {
   println attachments.toString()
 
   // Send notifications
-  slackSend (color: colorCode, message: subject, attachments: attachments.toString())
-
+  slackSend (color: colorCode, message: subject, attachments: attachments.toString(), channel: channel)
 }
