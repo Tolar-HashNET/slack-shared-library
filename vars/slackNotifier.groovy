@@ -32,7 +32,7 @@ def call(String buildStatus = 'STARTED') {
     colorCode = '#FFFF00'
   } else if (buildStatus == 'SUCCESSFUL') {
     color = 'GREEN'
-    colorCode = '#00FF00'
+    colorCode = 'good'
   } else if (buildStatus == 'UNSTABLE') {
     color = 'YELLOW'
     colorCode = 'warning'
@@ -85,7 +85,7 @@ def call(String buildStatus = 'STARTED') {
   commitAuthor.put('title', 'Author');
   commitAuthor.put('value', author.toString());
   commitAuthor.put('short', true);
-  // JSONObject for branch
+  // JSONObject for commit message
   JSONObject commitMessage = new JSONObject();
   commitMessage.put('title', 'Commit Message');
   commitMessage.put('value', message.toString());
