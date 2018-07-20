@@ -31,6 +31,7 @@ def call(String buildStatus = 'STARTED', String branch = 'master') {
     colorCode = '#FFFF00'
   } else if (buildStatus == 'SUCCESSFUL') {
     color = 'GREEN'
+<<<<<<< HEAD
     colorCode = 'good'
   } else if (buildStatus == 'UNSTABLE') {
     color = 'YELLOW'
@@ -59,6 +60,7 @@ def call(String buildStatus = 'STARTED', String branch = 'master') {
         summary = "No tests found"
     }
     return summary
+
   }
   def testSummaryRaw = getTestSummary()
   // format test summary as a code block
