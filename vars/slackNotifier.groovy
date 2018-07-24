@@ -8,11 +8,10 @@ import net.sf.json.JSONObject;
 import hudson.tasks.test.AbstractTestResultAction;
 import hudson.model.Actionable;
 
-def call(String buildStatus = 'STARTED', String Branch = 'develop') {
+def call(String buildStatus = 'STARTED') {
 
   // buildStatus of null means successfull
   buildStatus = buildStatus ?: 'SUCCESSFUL'
-  Branch = Branch ?: 'develop'
   //env.CHANGE_BRANCH ?: env.GIT_BRANCH ?: scm.branches[0]?.name?.split('/')[1] ?: 'UNKNOWN'
 
   // Default values
@@ -24,7 +23,7 @@ def call(String buildStatus = 'STARTED', String Branch = 'develop') {
   //def branchName = env.CHANGE_BRANCH ?: env.GIT_BRANCH ?: scm.branches[0]?.name?.split('/')[1] ?: 'UNKNOWN'
   //def branchName = sh(returnStdout: true, script: 'git rev-parse --abbrev-ref HEAD').trim()
   //def branchName = "${env.BRANCH_NAME}"
-  def branchName = Branch
+  def branchName = gitBranchName()
 
   def commit = sh(returnStdout: true, script: 'git rev-parse HEAD')
   def author = sh(returnStdout: true, script: "git --no-pager show -s --format='%an'").trim()
