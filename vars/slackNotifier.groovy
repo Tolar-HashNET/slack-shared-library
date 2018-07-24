@@ -12,6 +12,7 @@ def call(String buildStatus = 'STARTED', String branch = 'develop') {
 
   // buildStatus of null means successfull
   buildStatus = buildStatus ?: 'SUCCESSFUL'
+  branch = branch ?: 'develop'
   //env.CHANGE_BRANCH ?: env.GIT_BRANCH ?: scm.branches[0]?.name?.split('/')[1] ?: 'UNKNOWN'
 
   // Default values
