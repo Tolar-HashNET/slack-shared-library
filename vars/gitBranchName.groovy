@@ -4,6 +4,6 @@ def call(body) {
     body.delegate = config
     body()
     
-    Branch = sh(script: echo "${config.projectName}")
+    string Branch = sh(returnStdout: true, script: "${config.BranchName}")
     return Branch
 }
