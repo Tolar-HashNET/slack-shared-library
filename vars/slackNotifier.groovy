@@ -22,12 +22,10 @@ def call(String buildStatus = 'STARTED') {
   def title_link = "${env.RUN_DISPLAY_URL}"
   //def branchName = env.CHANGE_BRANCH ?: env.GIT_BRANCH ?: scm.branches[0]?.name?.split('/')[1] ?: 'UNKNOWN'
   //def branchName = sh(returnStdout: true, script: 'git rev-parse --abbrev-ref HEAD').trim()
-  //def branchName = "${env.BRANCH_NAME}"
-  def branchName = gitBranchName().call
 
   def commit = sh(returnStdout: true, script: 'git rev-parse HEAD')
   def author = sh(returnStdout: true, script: "git --no-pager show -s --format='%an'").trim()
-
+  def branchName = ${env.GIT_BRANCH}
   def message = sh(returnStdout: true, script: 'git log -1 --pretty=%B').trim()
 
   // Override default values based on build status
