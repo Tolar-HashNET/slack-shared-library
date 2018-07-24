@@ -1,13 +1,6 @@
 #!/usr/bin/env groovy
 
 /**
-<<<<<<< HEAD
- * Send notifications based on build status string
- */
-def call(String buildStatus = 'STARTED') {
-  // build status of null means successful
-  buildStatus = buildStatus ?: 'SUCCESS'
-=======
 * notify slack and set message based on build status
 */
 import net.sf.json.JSONArray;
@@ -20,17 +13,10 @@ def call(String buildStatus = 'STARTED') {
   // buildStatus of null means successfull
   buildStatus = buildStatus ?: 'SUCCESSFUL'
   //env.CHANGE_BRANCH ?: env.GIT_BRANCH ?: scm.branches[0]?.name?.split('/')[1] ?: 'UNKNOWN'
->>>>>>> slack-custom-messages
 
   // Default values
   def colorName = 'RED'
   def colorCode = '#FF0000'
-<<<<<<< HEAD
-  def subject = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
-  def summary = "${subject} (${env.BUILD_URL})"
-  def details = """<p>${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
-    <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>"""
-=======
   def subject = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}] (<${env.RUN_DISPLAY_URL}|Open>) (<${env.RUN_CHANGES_DISPLAY_URL}|  Changes>)'"
   def title = "${env.JOB_NAME} Build: ${env.BUILD_NUMBER}"
   def title_link = "${env.RUN_DISPLAY_URL}"
@@ -41,24 +27,42 @@ def call(String buildStatus = 'STARTED') {
   def author = sh(returnStdout: true, script: "git --no-pager show -s --format='%an'").trim()
   def branchName = "${env.GIT_BRANCH}"
   def message = sh(returnStdout: true, script: 'git log -1 --pretty=%B').trim()
->>>>>>> slack-custom-messages
 
   // Override default values based on build status
   if (buildStatus == 'STARTED') {
     color = 'YELLOW'
     colorCode = '#FFFF00'
-  } else if (buildStatus == 'SUCCESS') {
+  } else if (buildStatus == 'SUCCESSFUL') {
     color = 'GREEN'
-    colorCode = '#00FF00'
+    colorCode = 'good'
+  } else if (buildStatus == 'UNSTABLE') {
+    color = 'YELLOW'
+    colorCode = 'warning'
   } else {
     color = 'RED'
-    colorCode = '#FF0000'
+    colorCode = 'danger'
   }
-<<<<<<< HEAD
 
-  // Send notifications
-  slackSend (color: colorCode, message: summary)
-=======
+  // get test results for slack message
+  @NonCPS
+  def getTestSummary = { ->
+    def testResultAction = currentBuild.rawBuild.getAction(AbstractTestResultAction.class)
+    def summary = ""
+
+    if (testResultAction != null) {
+        def total = testResultAction.getTotalCount()
+        def failed = testResultAction.getFailCount()
+        def skipped = testResultAction.getSkipCount()
+
+        summary = "Test results:\n\t"
+        summary = summary + ("Passed: " + (total - failed - skipped))
+        summary = summary + (", Failed: " + failed + " ${testResultAction.failureDiffString}")
+        summary = summary + (", Skipped: " + skipped)
+    } else {
+        summary = "No tests found"
+    }
+    return summary
+  }
   def testSummaryRaw = getTestSummary()
   // format test summary as a code block
   def testSummary = "```${testSummaryRaw}```"
@@ -100,5 +104,4 @@ def call(String buildStatus = 'STARTED') {
 
   // Send notifications
   slackSend (color: colorCode, message: subject, attachments: attachments.toString())
->>>>>>> slack-custom-messages
 }
