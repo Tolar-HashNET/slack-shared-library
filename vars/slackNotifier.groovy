@@ -25,7 +25,7 @@ def call(String buildStatus = 'STARTED') {
 
   def commit = sh(returnStdout: true, script: 'git rev-parse HEAD')
   def author = sh(returnStdout: true, script: "git --no-pager show -s --format='%an'").trim()
-  def branchName = ${env.GIT_BRANCH}
+  def branchName = "${env.GIT_BRANCH}"
   def message = sh(returnStdout: true, script: 'git log -1 --pretty=%B').trim()
 
   // Override default values based on build status
