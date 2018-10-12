@@ -93,11 +93,11 @@ def call(String buildStatus = 'STARTED') {
   commitMessage.put('value', message.toString());
   commitMessage.put('short', false);
   // JSONObject for test results
-  JSONObject testResults = new JSONObject();
-  testResults.put('title', 'Test Summary')
-    testResults.put('value', testSummary.toString())
-    testResults.put('short', false)
-    attachment.put('fields', [branch, commitAuthor, commitMessage, testResults]);
+  // JSONObject testResults = new JSONObject();
+  // testResults.put('title', 'Test Summary')
+  //   testResults.put('value', testSummary.toString())
+  //   testResults.put('short', false)
+  attachment.put('fields', [branch, commitAuthor, commitMessage ]);
   JSONArray attachments = new JSONArray();
   attachments.add(attachment);
   println attachments.toString();
